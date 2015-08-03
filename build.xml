@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project name="TAFInstaller" default="build" basedir=".">
+
+  <target name="prepare">
+    <!-- convert the CVS repository directory into
+         a fully-qualitied Windows directory -->
+    <pathconvert targetos="windows" property="cvsrepository.path">
+       <path>
+         <pathelement location="http://cvsserver.datalex.ie/viewcvs/"/>
+       </path>
+    </pathconvert>
+    <!-- store the CVS root in a property -->
+    <property name="cvsroot" value=":pserver:hanna.vashchilo@10.160.254.238:/src/cvs"/>
+    <!-- determine if the files have been checked out -->
+    <available file="00007167" type="dir" property="already.checked.out"/>
+  </target>
+  
+  <target name="cvscheckout" depends="prepare" unless="already.checked.out">
+    <cvs cvsroot="${cvsroot}"
+         package="00007167/TestAutomationFramework"/>
+  </target>
+
+  <target name="cvsupdate" depends="prepare" if="already.checked.out">
+    <cvs command="update -dP"
+         cvsroot="${cvsroot}"
+         dest="00007167/TestAutomationFramework"/>
+  </target>
+
+  <target name="build" depends="cvscheckout,cvsupdate" basedir=".">
+    <ant dir="00007167/TestAutomationFramework" inheritAll="false"/>
+    <exec executable="cmd.exe" spawn="yes">
+        <arg line="/c start cmd.exe" />  
+    </exec>
+  </target>
+
+    <target name="clean"
+          description="Remove the entire TAF directory directory.">
+    <delete dir="0007167/TestAutomationFramework"/>
+  </target>
+</project>
