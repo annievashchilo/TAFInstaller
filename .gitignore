@@ -17,8 +17,6 @@ $RECYCLE.BIN/
 
 00007167/
 *.class
-nbproject/
-build/
 
 # Windows shortcuts
 *.lnk
